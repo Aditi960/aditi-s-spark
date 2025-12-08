@@ -9,7 +9,7 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           {/* Copyright */}
           <p className="text-sm text-muted-foreground flex items-center gap-1.5">
-            © {currentYear} Aditi Thakare. Crafted with{' '}
+            © {currentYear} Aditi Thakare. 
             <Heart className="w-4 h-4 text-destructive fill-destructive animate-pulse" />
           </p>
 
