@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Mail, Linkedin, Github, MapPin, Globe, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ContactForm from './ContactForm';
 
 const Contact = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -80,53 +81,73 @@ const Contact = () => {
           </p>
         </div>
 
-        {/* Contact cards */}
-        <div className={`grid sm:grid-cols-2 gap-4 mb-12 ${isVisible ? 'animate-fade-up' : 'opacity-0'}`} style={{ animationDelay: '200ms' }}>
-          {contactLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              target={link.href.startsWith('mailto') ? undefined : '_blank'}
-              rel="noopener noreferrer"
-              className="group glass rounded-xl p-5 flex items-center gap-4 card-hover"
-              aria-label={`${link.label}: ${link.value}`}
-            >
-              <div className="p-3 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                <link.icon className="w-5 h-5 text-primary" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">{link.label}</p>
-                <p className="text-foreground font-medium group-hover:text-primary transition-colors">
-                  {link.value}
-                </p>
-              </div>
-            </a>
-          ))}
-        </div>
+        {/* Two column layout on desktop */}
+        <div className="grid lg:grid-cols-2 gap-12">
+          {/* Contact Form */}
+          <div className={`${isVisible ? 'animate-fade-up' : 'opacity-0'}`} style={{ animationDelay: '200ms' }}>
+            <h3 className="text-xl font-serif font-semibold mb-6 text-center lg:text-left">
+              Send me a message
+            </h3>
+            <ContactForm />
+          </div>
 
-        {/* CTAs */}
-        <div className={`flex flex-col sm:flex-row items-center justify-center gap-4 ${isVisible ? 'animate-fade-up' : 'opacity-0'}`} style={{ animationDelay: '400ms' }}>
-          <Button
-            variant="hero"
-            size="xl"
-            asChild
-          >
-            <a href="mailto:aditithakare02@gmail.com">
-              <Mail className="w-5 h-5" />
-              Hire Me Now
-            </a>
-          </Button>
+          {/* Contact info & links */}
+          <div className={`space-y-6 ${isVisible ? 'animate-fade-up' : 'opacity-0'}`} style={{ animationDelay: '400ms' }}>
+            <h3 className="text-xl font-serif font-semibold mb-6 text-center lg:text-left">
+              Or reach out directly
+            </h3>
+            
+            {/* Contact cards */}
+            <div className="grid gap-4">
+              {contactLinks.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target={link.href.startsWith('mailto') ? undefined : '_blank'}
+                  rel="noopener noreferrer"
+                  className="group glass rounded-xl p-5 flex items-center gap-4 card-hover"
+                  aria-label={`${link.label}: ${link.value}`}
+                >
+                  <div className="p-3 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                    <link.icon className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">{link.label}</p>
+                    <p className="text-foreground font-medium group-hover:text-primary transition-colors">
+                      {link.value}
+                    </p>
+                  </div>
+                </a>
+              ))}
+            </div>
+
+            {/* CTAs */}
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <Button
+                variant="heroPrimary"
+                size="lg"
+                asChild
+                className="flex-1"
+              >
+                <a href="mailto:aditithakare02@gmail.com">
+                  <Mail className="w-5 h-5" />
+                  Email Directly
+                </a>
+              </Button>
           
-          <Button
-            variant="heroOutline"
-            size="xl"
-            asChild
-          >
-            <a href="/Aditi_Thakare_Resume.pdf" download>
-              <Download className="w-5 h-5" />
-              Download Resume
-            </a>
-          </Button>
+              <Button
+                variant="heroOutline"
+                size="lg"
+                asChild
+                className="flex-1"
+              >
+                <a href="/Aditi_Thakare_Resume.pdf" download>
+                  <Download className="w-5 h-5" />
+                  Resume
+                </a>
+              </Button>
+            </div>
+          </div>
         </div>
 
         {/* Languages */}
