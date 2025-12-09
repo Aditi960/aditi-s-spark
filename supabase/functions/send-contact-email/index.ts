@@ -90,13 +90,16 @@ const handler = async (req: Request): Promise<Response> => {
     const notificationHtml = `<html>...notification html with ${name} ...</html>`; // shorten here for brevity or reuse your HTML.
     const confirmationHtml = `<html>...confirmation html for ${name} ...</html>`;
 
-    const notify = await sendEmail(["aditithakare02@gmail.com"], `New Contact: ${subject}`, notificationHtml, FROM_ADDRESS);
+    // Send notification to your verified email only (Resend restriction without verified domain)
+    const notify = await sendEmail(["aditithakare960@gmail.com"], `New Contact: ${subject}`, notificationHtml, FROM_ADDRESS);
     console.log("Resend notify response:", notify);
 
-    const confirm = await sendEmail([email], "Thanks for reaching out! 💫", confirmationHtml, FROM_ADDRESS);
-    console.log("Resend confirm response:", confirm);
+    // Note: Confirmation email to sender requires a verified domain on Resend
+    // Once you verify a domain at resend.com/domains, uncomment this:
+    // const confirm = await sendEmail([email], "Thanks for reaching out! 💫", confirmationHtml, FROM_ADDRESS);
+    // console.log("Resend confirm response:", confirm);
 
-    return new Response(JSON.stringify({ success: true, message: "Emails sent" }), {
+    return new Response(JSON.stringify({ success: true, message: "Message received! We'll get back to you soon." }), {
       status: 200,
       headers: { "Content-Type": "application/json", ...corsHeaders },
     });
