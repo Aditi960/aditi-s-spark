@@ -1,73 +1,120 @@
-# Welcome to your Lovable project
+# Aditi Thakare — Web Developer Portfolio
 
-## Project info
+A modern, responsive personal portfolio website built to present my skills, projects, and technical background as a **BCA student and aspiring Web Developer**.  
+The goal of this project is straightforward: give recruiters a clear, fast overview of what I can build and how I approach real-world frontend development.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+---
 
-## How can I edit this code?
+## Live Website
 
-There are several ways of editing your application.
+https://aditithakare.netlify.app/
 
-**Use Lovable**
+---
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## About Me
 
-Changes made via Lovable will be committed automatically to this repo.
+I’m **Aditi Thakare**, a third-year **BCA student** focused on frontend and full-stack web development.  
+I’m actively looking for **internship or entry-level roles** where I can contribute to real products, improve my engineering fundamentals, and grow through hands-on work.
 
-**Use your preferred IDE**
+This portfolio reflects practical skills, not tutorial-level experiments.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+---
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Key Features
 
-Follow these steps:
+- Clean, responsive UI with mobile-first design
+- Modular, reusable React components
+- Type-safe forms with validation
+- Client-side routing for smooth navigation
+- Authentication and backend integration using Supabase
+- Scalable project structure aligned with real-world React apps
+- Deployed and production-ready
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+---
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## Tech Stack
 
-# Step 3: Install the necessary dependencies.
-npm i
+### Frontend
+- React (TypeScript)
+- Vite
+- Tailwind CSS
+- shadcn/ui
+- Radix UI
+- React Router
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### State & Utilities
+- React Hook Form
+- Zod
+- TanStack Query
+
+### Backend / Services
+- Supabase (Auth & Database)
+
+### Tooling & Deployment
+- ESLint
+- Git & GitHub
+- Netlify
+
+---
+
+## Project Structure
+
+```
+├── public/
+├── src/
+│   ├── components/
+│   ├── pages/
+│   ├── hooks/
+│   ├── lib/
+│   ├── services/
+│   ├── styles/
+│   └── main.tsx
+├── index.html
+├── package.json
+├── tailwind.config.ts
+├── tsconfig.json
+└── vite.config.ts
+```
+
+---
+
+## Local Setup / Getting Started
+
+```bash
+# Clone the repository
+git clone https://github.com/<your-username>/<repository-name>.git
+
+# Navigate into the project
+cd <repository-name>
+
+# Install dependencies
+npm install
+
+# Run the development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The app will be available at `http://localhost:5173`.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+---
 
-**Use GitHub Codespaces**
+## Why This Project Matters
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+This project demonstrates my ability to:
 
-## What technologies are used for this project?
+- Build a production-grade React application using TypeScript
+- Structure code for maintainability and scalability
+- Use modern UI libraries instead of custom hacks
+- Handle form validation and async data properly
+- Integrate frontend applications with a real backend service
+- Deploy and maintain a live application
 
-This project is built with:
+It reflects how I would approach frontend work in a professional environment.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+---
 
-## How can I deploy this project?
+## Contact Information
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- Email: aditithakare02@gmail.com 
+- GitHub: https://github.com/aditithakare  
+- LinkedIn: https://www.linkedin.com/in/aditithakare/
