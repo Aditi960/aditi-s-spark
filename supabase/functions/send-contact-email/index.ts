@@ -15,6 +15,18 @@ interface ContactFormRequest {
   message?: string;
 }
 
+// HTML escape function to prevent XSS in email templates
+function escapeHtml(text: string): string {
+  const htmlEntities: Record<string, string> = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  };
+  return text.replace(/[&<>"']/g, (char) => htmlEntities[char] || char);
+}
+
 async function sendEmail(to: string[], subject: string, html: string, from: string) {
   if (!RESEND_API_KEY) {
     throw new Error("RESEND_API_KEY is not set in environment");
@@ -34,7 +46,9 @@ async function sendEmail(to: string[], subject: string, html: string, from: stri
   try { json = JSON.parse(text); } catch (_) { json = text; }
 
   if (!res.ok) {
-    throw new Error(`Resend API error (${res.status}): ${typeof json === "string" ? json : JSON.stringify(json)}`);
+    // Log detailed error server-side only
+    console.error("Resend API error details:", { status: res.status, response: json });
+    throw new Error("Failed to send email");
   }
   return json;
 }
@@ -53,18 +67,17 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Read raw text first for debugging (req.json() will fail if content-type is wrong)
     const rawBody = await req.text();
-    console.log("Raw body text:", rawBody);
+    console.log("Raw body received, length:", rawBody.length);
 
     let payload: ContactFormRequest = {};
     if (rawBody) {
       try {
         payload = JSON.parse(rawBody);
       } catch (err) {
-        // If parse fails, respond with a helpful message
+        // If parse fails, respond with a generic message (don't expose raw body)
         console.error("Failed to parse JSON body:", err);
         return new Response(JSON.stringify({
-          error: "Invalid JSON body. Make sure Content-Type is application/json and body is JSON.",
-          rawBody
+          error: "Invalid request format. Please try again."
         }), { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders }});
       }
     } else {
@@ -73,31 +86,55 @@ const handler = async (req: Request): Promise<Response> => {
 
     const { name, email, subject, message } = payload;
 
-    console.log(`Parsed payload => name:${name}, email:${email}, subject:${subject}`);
+    console.log("Received contact form submission");
 
     if (!name || !email || !subject || !message) {
-      console.error("Missing required fields", { name, email, subject, message });
-      return new Response(JSON.stringify({ error: "All fields (name, email, subject, message) are required" }), {
+      console.error("Missing required fields");
+      return new Response(JSON.stringify({ error: "All fields are required" }), {
         status: 400,
         headers: { "Content-Type": "application/json", ...corsHeaders },
       });
     }
 
+    // Sanitize all user inputs to prevent XSS in email templates
+    const safeName = escapeHtml(name.trim());
+    const safeEmail = escapeHtml(email.trim());
+    const safeSubject = escapeHtml(subject.trim());
+    const safeMessage = escapeHtml(message.trim()).replace(/\n/g, '<br>');
+
     // NOTE: Resend requires from to be a verified or allowed sender on your Resend account.
     // Use an address that is allowed by Resend.
-    const FROM_ADDRESS = "Aditi Thakare <onboarding@resend.dev>"; // verify this in Resend dashboard
+    const FROM_ADDRESS = "Aditi Thakare <onboarding@resend.dev>";
 
-    const notificationHtml = `<html>...notification html with ${name} ...</html>`; // shorten here for brevity or reuse your HTML.
-    const confirmationHtml = `<html>...confirmation html for ${name} ...</html>`;
+    const notificationHtml = `
+      <html>
+        <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <h2 style="color: #8B5CF6;">New Contact Form Submission</h2>
+          <p><strong>From:</strong> ${safeName} (${safeEmail})</p>
+          <p><strong>Subject:</strong> ${safeSubject}</p>
+          <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-top: 15px;">
+            <p><strong>Message:</strong></p>
+            <p>${safeMessage}</p>
+          </div>
+        </body>
+      </html>
+    `;
 
     // Send notification to your verified email only (Resend restriction without verified domain)
-    const notify = await sendEmail(["aditithakare960@gmail.com"], `New Contact: ${subject}`, notificationHtml, FROM_ADDRESS);
-    console.log("Resend notify response:", notify);
+    const notify = await sendEmail(["aditithakare960@gmail.com"], `New Contact: ${safeSubject}`, notificationHtml, FROM_ADDRESS);
+    console.log("Email sent successfully");
 
     // Note: Confirmation email to sender requires a verified domain on Resend
-    // Once you verify a domain at resend.com/domains, uncomment this:
+    // Once you verify a domain at resend.com/domains, uncomment and update FROM_ADDRESS:
+    // const confirmationHtml = `
+    //   <html>
+    //     <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+    //       <h2 style="color: #8B5CF6;">Thanks for reaching out, ${safeName}! 💫</h2>
+    //       <p>I received your message and will get back to you soon.</p>
+    //     </body>
+    //   </html>
+    // `;
     // const confirm = await sendEmail([email], "Thanks for reaching out! 💫", confirmationHtml, FROM_ADDRESS);
-    // console.log("Resend confirm response:", confirm);
 
     return new Response(JSON.stringify({ success: true, message: "Message received! We'll get back to you soon." }), {
       status: 200,
@@ -105,7 +142,8 @@ const handler = async (req: Request): Promise<Response> => {
     });
   } catch (err: any) {
     console.error("Handler error:", err);
-    return new Response(JSON.stringify({ error: err.message || String(err) }), {
+    // Return generic error message to client
+    return new Response(JSON.stringify({ error: "Failed to send message. Please try again later." }), {
       status: 500,
       headers: { "Content-Type": "application/json", ...corsHeaders },
     });
